@@ -1,0 +1,104 @@
+{% extends 'layout.html'%}
+
+{%block contentC%}
+<div class="container w-50">
+    <form method="POST" action="{{url_for('register')}}">
+        {{form.hidden_tag()}}
+        <fieldset>
+            <legend class="border-bottom mb-4">Регистрация</legend>
+            <div class="form-group">
+                {{form.username.label(class="form-control-label")}}
+                {%if form.username.errors%}
+                {{form.username(class="form-control form-control-lg is-invalid")}}
+                {%for error in form.username.errors%}
+                <span>{{error}}</span>
+                {%endfor%}
+                {%else%}
+                {{form.username(class="form-control form-control-lg")}}
+                {%endif%}
+            </div>
+            <div class="form-group">
+                {{form.password.label(class="form-control-label")}}
+                {%if form.username.errors%}
+                {{form.password(class="form-control form-control-lg is-invalid")}}
+                {%for error in form.password.errors%}
+                <span>{{error}}</span>
+                {%endfor%}
+                {%else%}
+                {{form.password(class="form-control form-control-lg")}}
+                {%endif%}
+            </div>
+            <div class="form-group">
+                {{form.firstname.label(class="form-control-label")}}
+                {%if form.firstname.errors%}
+                {{form.firstname(class="form-control form-control-lg is-invalid")}}
+                {%for error in form.firstname.errors%}
+                <span>{{error}}</span>
+                {%endfor%}
+                {%else%}
+                {{form.firstname(class="form-control form-control-lg")}}
+                {%endif%}
+            </div>
+            <div class="form-group">
+                {{form.lastname.label(class="form-control-label")}}
+                {%if form.lastname.errors%}
+                {{form.lastname(class="form-control form-control-lg is-invalid")}}
+                {%for error in form.lastname.errors%}
+                <span>{{error}}</span>
+                {%endfor%}
+                {%else%}
+                {{form.lastname(class="form-control form-control-lg")}}
+                {%endif%}
+            </div>
+            <div class="form-group">
+                {{form.family_name.label(class="form-control-label")}}
+                {%if form.family_name.errors%}
+                {{form.family_name(class="form-control form-control-lg is-invalid")}}
+                {%for error in form.family_name.errors%}
+                <span>{{error}}</span>
+                {%endfor%}
+                {%else%}
+                {{form.family_name(class="form-control form-control-lg")}}
+                {%endif%}
+            </div>
+            <div class="form-group">
+                {{form.is_admin.label(class="form-control-label")}}
+                {{form.is_admin(class="form-check-input")}}
+                <label class="form-check-label" for="{{form.is_admin.id}}"></label>
+                {%if form.is_admin.errors%}
+                <div class="invalid-feedback">
+                    {%for error in form.is_admin.errors%}
+                    <span>{{error}}</span>
+                    {%endfor%}
+                </div>
+                {%endif%}
+            </div>
+            <div class="form-group">
+                {{form.dateofbirth.label(class="form-control-label")}}
+                {%if form.dateofbirth.errors%}
+                {{form.phone(class="form-control form-control-lg is-invalid")}}
+                {%for error in form.dateofbirth.errors%}
+                <span>{{error}}</span>
+                {%endfor%}
+                {%else%}
+                {{form.dateofbirth(class="form-control form-control-lg")}}
+                {%endif%}
+            </div>
+            <div class="form-group">
+                {{form.address.label(class="form-control-label")}}
+                {%if form.address.errors%}
+                {{form.address(class="form-control form-control-lg is-invalid")}}
+                {%for error in form.address.errors%}
+                <span>{{error}}</span>
+                {%endfor%}
+                {%else%}
+                {{form.address(class="form-control form-control-lg")}}
+                {%endif%}
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-outline-info">Зарегистрировать</button>
+            </div>
+        </fieldset>
+    </form>
+</div>
+{%endblock contentC%}

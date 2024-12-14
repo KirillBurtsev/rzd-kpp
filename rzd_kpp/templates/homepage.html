@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+
+{% block contentA %}
+<br>
+<div class="container">
+    <h2>Добро пожаловать на главную страницу!</h2>
+    <p>Здесь вы можете найти основную информацию о нашем сервисе.</p>
+    <p>Пожалуйста, используйте навигацию вверху, чтобы перейти к другим разделам.</p>
+</div>
+
+<script src="{{ url_for('static', filename='main.js') }}"></script>
+{% endblock contentA %}

@@ -1,0 +1,8 @@
+.navbar {
+    background-color: #343a40;
+  }
+ 
+  .navbar-brand, .nav-link, .nav-item a.nav-link.active {
+    color: #0c6efc;
+ }
+ 

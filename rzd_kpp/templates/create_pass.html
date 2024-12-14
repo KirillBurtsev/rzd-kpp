@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+
+{% block contentD %}
+<h2>Create New Pass</h2>
+
+<form method="POST" action="{{ url_for('create_pass') }}">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        <label for="pass_type" class="form-control-label">Pass Type</label>
+        {{ form.pass_type(class="form-control") }}
+    </div>
+    <div class="form-group">
+        <label for="start_date" class="form-control-label">Start Date</label>
+        {{ form.start_date(class="form-control") }}
+    </div>
+    <div class="form-group">
+        <label for="expire_date" class="form-control-label">Expire Date</label>
+        {{ form.expire_date(class="form-control") }}
+    </div>
+    <div class="form-group">
+        <label for="is_active" class="form-control-label">Active</label>
+        {{ form.is_active(class="form-check-input") }}
+    </div>
+    <div class="form-group">
+        {{ form.submit(class="btn btn-primary") }}
+    </div>
+</form>
+
+{% endblock contentD %}
+

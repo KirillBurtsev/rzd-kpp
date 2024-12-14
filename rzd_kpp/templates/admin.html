@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}
+
+{% block contentA %}
+<h2>Администрирование</h2>
+<p>Здесь будут функции администрирования.</p>
+    <h3>Управление пропусками</h3>
+    <a href="{{ url_for('create_pass') }}" class="btn btn-success">Создать пропуск</a>
+
+    <p>У вас нет прав доступа к этому разделу.</p>
+{% endblock contentA %}
