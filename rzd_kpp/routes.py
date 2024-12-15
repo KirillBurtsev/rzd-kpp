@@ -1,4 +1,4 @@
-from rzd_kpp import app, db
+from rzd_kpp import app, db, bcrypt
 from flask import render_template, url_for, request, redirect, flash, abort, session
 from rzd_kpp.forms import LoginForm, RegisterForm, PassForm
 from rzd_kpp.models import User, UserDetails, Pass
@@ -27,7 +27,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user=User.query.filter_by(Login=form.username.data).first()
-        if user and user.Password==form.password.data:
+        if user and bcrypt.check_password_hash(user.Password, form.password.data):
             flash(f'Успешная авторизация для пльзователя {form.username.data}')
             return redirect(url_for('index'))
         else:
@@ -49,9 +49,10 @@ def register():
     form = RegisterForm()
     if form.validate_on_submit():
         print("Form validated successfully")
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user = User(
             Login=form.username.data,
-            Password=form.password.data
+            Password=hashed_password
             )
         user_details = UserDetails(
             Firstname=form.firstname.data,

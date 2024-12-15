@@ -9,7 +9,7 @@ class User(db.Model):
 
     UserID = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True)
     Login = db.Column(db.String(55), nullable=False, unique=True)
-    Password = db.Column(db.String(55), nullable=False)
+    Password = db.Column(db.String(60), nullable=False)
     details = db.relationship('UserDetails', backref='parent', uselist=False, cascade="all, delete-orphan")
     user_passes = db.relationship('UserPass', backref='user', cascade="all, delete-orphan")
 
