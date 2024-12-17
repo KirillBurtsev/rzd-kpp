@@ -1,30 +1,55 @@
 {% extends 'layout.html' %}
 
 {% block contentD %}
-<h2>Create New Pass</h2>
+<h2>Создание пропуска</h2>
 
 <form method="POST" action="{{ url_for('create_pass') }}">
     {{ form.hidden_tag() }}
+    
+    <!-- Dropdown for selecting the user -->
     <div class="form-group">
-        <label for="pass_type" class="form-control-label">Pass Type</label>
-        {{ form.pass_type(class="form-control") }}
+        <label for="user_id" class="form-control-label">Выберите пользователя</label>
+        <select name="user_id" id="user_id" class="form-control" required>
+            <option value="">-- Выберите пользователя --</option>
+            {% for user in users %}
+            <option value="{{ user.UserID }}">{{ user.Login }}</option>
+            {% endfor %}
+        </select>
     </div>
+    
+    <!-- Dropdown for selecting the pass type -->
     <div class="form-group">
-        <label for="start_date" class="form-control-label">Start Date</label>
+        <label for="pass_type_id" class="form-control-label">Выберите тип пропуска</label>
+        <select name="pass_type_id" id="pass_type_id" class="form-control" required>
+            <option value="">-- Выберите тип пропуска --</option>
+            {% for pass_type in pass_types %}
+            <option value="{{ pass_type.PassTypeID }}">{{ pass_type.Name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    
+    <!-- Start Date Field -->
+    <div class="form-group">
+        <label for="start_date" class="form-control-label">Время начала действия</label>
         {{ form.start_date(class="form-control") }}
     </div>
+    
+    <!-- Expire Date Field -->
     <div class="form-group">
-        <label for="expire_date" class="form-control-label">Expire Date</label>
+        <label for="expire_date" class="form-control-label">Время окончания действия</label>
         {{ form.expire_date(class="form-control") }}
     </div>
-    <div class="form-group">
-        <label for="is_active" class="form-control-label">Active</label>
-        {{ form.is_active(class="form-check-input") }}
+    
+    <!-- Is Active Checkbox -->
+    <div class="form-group form-check">
+        <label for="is_active" class="form-check-label">
+            {{ form.is_active(class="form-check-input") }} Активен
+        </label>
     </div>
+    
+    <!-- Submit Button -->
     <div class="form-group">
         {{ form.submit(class="btn btn-primary") }}
     </div>
 </form>
-
 {% endblock contentD %}
-

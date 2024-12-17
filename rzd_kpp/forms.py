@@ -21,8 +21,7 @@ class RegisterForm(FlaskForm):
     submit = SubmitField(label='Подтвердить')
 
 class PassForm(FlaskForm):
-    pass_type = StringField('Pass Type', validators=[DataRequired()])
     start_date = DateField('Start Date', validators=[DataRequired()])
     expire_date = DateField('Expire Date', validators=[DataRequired()])
     is_active = BooleanField('Is Active')
-    submit = SubmitField('Create Pass')
+    submit = SubmitField('Создать пропуск')

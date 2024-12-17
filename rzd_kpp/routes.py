@@ -1,7 +1,7 @@
 from rzd_kpp import app, db, bcrypt
 from flask import render_template, url_for, request, redirect, flash, abort, session
 from rzd_kpp.forms import LoginForm, RegisterForm, PassForm
-from rzd_kpp.models import User, UserDetails, Pass
+from rzd_kpp.models import User, UserDetails, Pass, PassType
 # from flask_login import logout_user, current_user, login_required
 from functools import wraps
 from datetime import datetime
@@ -87,16 +87,47 @@ def register():
 @app.route('/create_pass', methods=['GET', 'POST'])
 def create_pass():
     form = PassForm()
-    if form.validate_on_submit():
-        new_pass = Pass(
-            PassType=form.pass_type.data,
-            StartDate=form.start_date.data,
-            ExpireDate=form.expire_date.data,
-            IsActive=form.is_active.data
-        )
-        db.session.add(new_pass)
-        db.session.commit()
-        flash('New pass created successfully!', 'success')
-        return redirect(url_for('admin'))  # Redirect to the admin page or pass list page
+    users = User.query.all()  # Fetch all users for the dropdown
+    pass_types = PassType.query.all()  # Fetch all pass types for the dropdown
 
-    return render_template('create_pass.html', form=form)
+    if request.method == 'POST':
+        user_id = request.form.get('user_id')  # Get selected user ID
+        pass_type_id = request.form.get('pass_type_id')  # Get selected pass type ID
+        start_date = form.start_date.data
+        expire_date = form.expire_date.data
+        is_active = form.is_active.data
+
+        if user_id and pass_type_id:
+            try:
+                # Create the Pass instance
+                new_pass = Pass(
+                    PassTypeID=pass_type_id,
+                    StartDate=start_date,
+                    ExpireDate=expire_date,
+                    IsActive=is_active
+                )
+                db.session.add(new_pass)
+                db.session.commit()
+
+                # Link the pass to the selected user
+                user_pass = UserPass(
+                    UserID=int(user_id),
+                    PassID=new_pass.PassID
+                )
+                db.session.add(user_pass)
+                db.session.commit()
+
+                flash('Pass created and assigned successfully!', 'success')
+                return redirect(url_for('admin'))
+            except Exception as e:
+                db.session.rollback()
+                flash(f'An error occurred: {e}', 'danger')
+        else:
+            flash('Please select a user and pass type.', 'danger')
+
+    return render_template(
+        'create_pass.html',
+        form=form,
+        users=users,
+        pass_types=pass_types
+    )

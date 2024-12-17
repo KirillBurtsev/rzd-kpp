@@ -35,12 +35,22 @@ class UserDetails(db.Model):
     def __repr__(self):
         return f'UserDetails(UserDetailsID={self.UserDetailsID}, Firstname={self.Firstname}, Lastname={self.Lastname})'
 
+class PassType(db.Model):
+    __tablename__ = 'PassType'
+
+    PassTypeID = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True)
+    Name = db.Column(db.String(55), nullable=False, unique=True)
+    passes = db.relationship('Pass', backref='pass_type', cascade="all, delete-orphan")
+
+    def __repr__(self):
+        return f'PassType(PassTypeID={self.PassTypeID}, Name={self.Name})'
+
 
 class Pass(db.Model):
     __tablename__ = 'Pass'
 
     PassID = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True)
-    PassType = db.Column(db.String(55))
+    PassTypeID = db.Column(db.Integer, db.ForeignKey('PassType.PassTypeID'), nullable=False)  # Foreign key for PassType
     StartDate = db.Column(db.Date)
     ExpireDate = db.Column(db.Date)
     IsActive = db.Column(db.Boolean, default=True)
@@ -49,7 +59,9 @@ class Pass(db.Model):
     user_passes = db.relationship('UserPass', backref='pass', cascade="all, delete-orphan")
 
     def __repr__(self):
-        return f'Pass(PassID={self.PassID}, PassType={self.PassType})'
+        return f'Pass(PassID={self.PassID}, PassType={self.pass_type.Name}, StartDate={self.StartDate})'
+    
+
 
 
 class UserPass(db.Model):
