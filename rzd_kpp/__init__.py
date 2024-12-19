@@ -4,6 +4,7 @@ from flask_bcrypt import Bcrypt
 # from flask_login import LoginManager
 app = Flask(__name__)
 
+
 app.config['SECRET_KEY']='someinstanse'
 app.config['SQLALCHEMY_DATABASE_URI']='postgresql://employee:12345678@localhost:5432/gate'
 

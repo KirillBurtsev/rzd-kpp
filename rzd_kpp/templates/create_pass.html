@@ -3,7 +3,7 @@
 {% block contentD %}
 <h2>Создание пропуска</h2>
 
-<form method="POST" action="{{ url_for('create_pass') }}">
+<form method="POST" action="{{ url_for('admin_create_pass') }}">
     {{ form.hidden_tag() }}
     
     <!-- Dropdown for selecting the user -->

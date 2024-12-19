@@ -25,3 +25,7 @@ class PassForm(FlaskForm):
     expire_date = DateField('Expire Date', validators=[DataRequired()])
     is_active = BooleanField('Is Active')
     submit = SubmitField('Создать пропуск')
+
+class PassTypeForm(FlaskForm):
+    name = StringField('Название типа пропуска', validators=[DataRequired(), Length(max=55)])
+    submit = SubmitField('Создать')

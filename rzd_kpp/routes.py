@@ -1,7 +1,7 @@
 from rzd_kpp import app, db, bcrypt
 from flask import render_template, url_for, request, redirect, flash, abort, session
-from rzd_kpp.forms import LoginForm, RegisterForm, PassForm
-from rzd_kpp.models import User, UserDetails, Pass, PassType
+from rzd_kpp.forms import LoginForm, RegisterForm, PassForm, PassTypeForm
+from rzd_kpp.models import User, UserDetails, Pass, PassType, UserPass
 # from flask_login import logout_user, current_user, login_required
 from functools import wraps
 from datetime import datetime
@@ -84,8 +84,8 @@ def register():
                 print(f"Error in {field}: {error}")
     return render_template('register.html', title='Регистрация', form=form)
 
-@app.route('/create_pass', methods=['GET', 'POST'])
-def create_pass():
+@app.route('/admin/create-pass', methods=['GET', 'POST'])
+def admin_create_pass():
     form = PassForm()
     users = User.query.all()  # Fetch all users for the dropdown
     pass_types = PassType.query.all()  # Fetch all pass types for the dropdown
@@ -131,3 +131,21 @@ def create_pass():
         users=users,
         pass_types=pass_types
     )
+
+@app.route('/admin/create-type', methods=['GET', 'POST'])
+def admin_create_type():
+    form = PassTypeForm()  # Assume you have a WTForm for creating a PassType
+    if form.validate_on_submit():
+        new_pass_type = PassType(
+            Name=form.name.data
+        )
+        try:
+            db.session.add(new_pass_type)
+            db.session.commit()
+            flash('Новый тип пропуска успешно создан!', 'success')
+            return redirect(url_for('admin'))
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error occurred: {e}")
+            flash('Ошибка при создании типа пропуска. Попробуйте снова.', 'danger')
+    return render_template('create_type.html', form=form)
