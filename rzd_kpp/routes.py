@@ -2,12 +2,19 @@ from rzd_kpp import app, db, bcrypt
 from flask import render_template, url_for, request, redirect, flash, abort, session
 from rzd_kpp.forms import LoginForm, RegisterForm, PassForm, PassTypeForm
 from rzd_kpp.models import User, UserDetails, Pass, PassType, UserPass
-# from flask_login import logout_user, current_user, login_required
+from flask_login import login_user, logout_user, current_user, login_required
 from functools import wraps
 from datetime import datetime
 from sqlalchemy import func, text
 import time
 
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.details or not current_user.details.IsAdmin:
+            abort(403)  # Deny access
+        return f(*args, **kwargs)
+    return decorated_function
 
 @app.route("/")
 @app.route("/home")
@@ -19,6 +26,8 @@ def account():
     return render_template("account.html", title='Аккаунт')
 
 @app.route("/admin")
+@login_required
+@admin_required
 def admin():
     return render_template("admin.html", title='Администрирование')
 
@@ -28,6 +37,7 @@ def login():
     if form.validate_on_submit():
         user=User.query.filter_by(Login=form.username.data).first()
         if user and bcrypt.check_password_hash(user.Password, form.password.data):
+            login_user(user)
             flash(f'Успешная авторизация для пльзователя {form.username.data}')
             return redirect(url_for('index'))
         else:
@@ -38,11 +48,11 @@ def login():
     return render_template("login.html", title='Вход', form=form)
 
 @app.route("/logout")
+@login_required
 def logout():
-    session.pop('username', None)  # Remove the username from the session
+    logout_user()
     flash('Вы вышли из системы.', 'success')
-    return redirect(url_for('index'))  # Redirect to the homepage after logout
-
+    return redirect(url_for('login'))
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():

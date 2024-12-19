@@ -1,10 +1,14 @@
-from rzd_kpp import db #,login_manager
+from rzd_kpp import db, login_manager
 from datetime import datetime
 from rzd_kpp import db
 from datetime import datetime
 from flask_login import UserMixin
 
-class User(db.Model):
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
+
+class User(db.Model, UserMixin):
     __tablename__ = 'User'
 
     UserID = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True)
@@ -15,6 +19,8 @@ class User(db.Model):
 
     def __repr__(self):
         return f'User(UserID={self.UserID}, Login={self.Login})'
+    def get_id(self):
+        return str(self.UserID)
 
 
 class UserDetails(db.Model):
