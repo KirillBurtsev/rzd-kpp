@@ -22,8 +22,17 @@ def index():
     return render_template("homepage.html", title='Домашнаяя страница')
 
 @app.route("/account")
+@login_required
 def account():
-    return render_template("account.html", title='Аккаунт')
+    user = current_user  # Get the logged-in user
+    details = user.details  # Access the associated UserDetails
+
+    return render_template(
+        "account.html",
+        title="Аккаунт",
+        user=user,
+        details=details
+    )
 
 @app.route("/admin")
 @login_required
@@ -95,6 +104,8 @@ def register():
     return render_template('register.html', title='Регистрация', form=form)
 
 @app.route('/admin/create-pass', methods=['GET', 'POST'])
+@login_required
+@admin_required
 def admin_create_pass():
     form = PassForm()
     users = User.query.all()  # Fetch all users for the dropdown
@@ -106,6 +117,16 @@ def admin_create_pass():
         start_date = form.start_date.data
         expire_date = form.expire_date.data
         is_active = form.is_active.data
+
+        # **Date Validation Logic**
+        if expire_date < start_date:
+            flash('Ошибка: Дата окончания действия не может быть раньше даты начала действия.', 'danger')
+            return render_template(
+                'create_pass.html',
+                form=form,
+                users=users,
+                pass_types=pass_types
+            )
 
         if user_id and pass_type_id:
             try:
@@ -127,13 +148,13 @@ def admin_create_pass():
                 db.session.add(user_pass)
                 db.session.commit()
 
-                flash('Pass created and assigned successfully!', 'success')
+                flash('Пропуск успешно создан и назначен!', 'success')
                 return redirect(url_for('admin'))
             except Exception as e:
                 db.session.rollback()
-                flash(f'An error occurred: {e}', 'danger')
+                flash(f'Произошла ошибка: {e}', 'danger')
         else:
-            flash('Please select a user and pass type.', 'danger')
+            flash('Пожалуйста, выберите пользователя и тип пропуска.', 'danger')
 
     return render_template(
         'create_pass.html',

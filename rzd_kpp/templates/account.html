@@ -1,6 +1,22 @@
-{% extends 'layout.html' %}
+{% extends "layout.html" %}
 
 {% block contentA %}
-<h2>Аккаунт</h2>
-<p>Здесь будет информация о вашем аккаунте.</p>
+<h2>Информация об аккаунте</h2>
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        {{ details.Firstname }} {{ details.Lastname }}
+    </div>
+    <div class="card-body">
+        <p><strong>Логин:</strong> {{ user.Login }}</p>
+        <p><strong>Имя:</strong> {{ details.Firstname }}</p>
+        <p><strong>Фамилия:</strong> {{ details.Lastname }}</p>
+        <p><strong>Отчество:</strong> {{ details.Familyname or "Не указано" }}</p>
+        <p><strong>Дата рождения:</strong> {{ details.DateOfBirth.strftime('%d.%m.%Y') if details.DateOfBirth else "Не указано" }}</p>
+        <p><strong>Адрес:</strong> {{ details.Address or "Не указано" }}</p>
+        <p><strong>Дата создания:</strong> {{ details.DateCreated.strftime('%d.%m.%Y') }}</p>
+        <p><strong>Активный пользователь:</strong> {{ "Да" if details.Active else "Нет" }}</p>
+        <p><strong>Администратор:</strong> {{ "Да" if details.IsAdmin else "Нет" }}</p>
+    </div>
+</div>
 {% endblock contentA %}
