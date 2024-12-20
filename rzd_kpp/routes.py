@@ -40,6 +40,37 @@ def account():
 def admin():
     return render_template("admin.html", title='Администрирование')
 
+@app.route("/admin/users")
+@login_required
+@admin_required
+def manage_users():
+    users = User.query.all()  # Fetch all users from the database
+    return render_template("manage_users.html", title="Управление пользователями", users=users)
+
+@app.route("/admin/edit-user/<int:user_id>", methods=["GET", "POST"])
+@login_required
+@admin_required
+def edit_user(user_id):
+    user = User.query.get_or_404(user_id)  # Fetch user by ID
+    # Logic for editing user
+    return f"Edit user with ID {user_id}"
+
+
+@app.route("/admin/delete-user/<int:user_id>", methods=["POST"])
+@login_required
+@admin_required
+def delete_user(user_id):
+    user = User.query.get_or_404(user_id)  # Fetch user by ID
+    try:
+        db.session.delete(user)
+        db.session.commit()
+        flash("Пользователь успешно удален.", "success")
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Ошибка при удалении пользователя: {e}", "danger")
+    return redirect(url_for("manage_users"))
+
+
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     form = LoginForm()
