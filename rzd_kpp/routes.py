@@ -211,3 +211,21 @@ def admin_create_type():
             print(f"Error occurred: {e}")
             flash('Ошибка при создании типа пропуска. Попробуйте снова.', 'danger')
     return render_template('create_type.html', form=form)
+
+@app.route("/my-passes")
+@login_required
+def my_passes():
+    # Fetch the logged-in user's passes
+    user_passes = UserPass.query.filter_by(UserID=current_user.UserID).all()
+    passes_info = [
+        {
+            "pass_id": user_pass.PassID,
+            "type_name": user_pass.pass_type.Name,  # Access PassType details
+            "start_date": user_pass.StartDate,
+            "expire_date": user_pass.ExpireDate,
+            "is_active": user_pass.IsActive,
+            "user_type": current_user.user_type.Name,  # Access UserType details
+        }
+        for user_pass in user_passes
+    ]
+    return render_template("my_passes.html", title="Мои пропуска", passes=passes_info)
